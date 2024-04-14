@@ -8,7 +8,7 @@ body {
     color:black;
   }
 
-  button{
+.button{
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -16,7 +16,7 @@ body {
     cursor: pointer;
   }
 
-  button:hover{
+.button:hover{
     background-color:palevioletred;
   }
 
