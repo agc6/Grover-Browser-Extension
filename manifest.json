@@ -10,8 +10,7 @@
       "storage"
     ],
     "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'",
-      "sandbox": [ "allow-scripts", "allow-forms"]
+      "extension_pages": "script-src 'self'; object-src 'self'"
     },
     "action": {
       "default_popup": "popup.html",
