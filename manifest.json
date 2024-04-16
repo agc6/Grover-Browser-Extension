@@ -7,8 +7,14 @@
       "activeTab"
     ],
     "action": {
-      "default_popup": "popup.html"
+      "default_popup": "popup.html",
+      "default_icon":{
+        "16": "icons8-fake-16.png",
+        "48": "icons8-fake-48.png",
+        "128": "icons8-fake-128.png"
+      }
     },
+
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
@@ -16,4 +22,5 @@
       }
     ]
   }
+  
   
