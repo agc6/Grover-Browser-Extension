@@ -16,6 +16,7 @@ function groverRequest() {
 
     let articleText = articleSubString.substring(0, endIndex);                  // get clean article substring
 
+    console.log(allText);
     console.log(articleText);                                                   // debug
 
     //article and target are the important things here
@@ -40,8 +41,16 @@ function groverRequest() {
 
     // determine whether the text was likely written by a human or a machine
     var result = "";
-    if (groverprob >= 0.000002291430519107962 && groverprob <= 0.014853283762931824) {
+    if (groverprob >= 0 && groverprob <= 0.014853283762931824) {
         result = "We believe this article is <str>human-written.</str>";
+    } if (groverprob >= 0.014853283762931824 && groverprob <= 0.1) {
+        result = "This article is most likely <str>human-written.</str>";
+    } if (groverprob >= 0.1 && groverprob <= 0.15) {
+        result = "This article may be human-written, but we're not sure.";
+    } if (groverprob >= 0.8 && groverprob <= 0.85) {
+        result = "This article may be machine-written, but we're not sure.";
+    } if (groverprob >= 0.85 && groverprob <= 0.9996635913848877) {
+        result = "This article is most likely <str>machine-written.</str>";
     } else if (groverprob >= 0.9996635913848877 && groverprob <= 0.9999986886978149) {
         result = "We believe this article is <str>human-written.</str>";
     } else {
@@ -49,7 +58,7 @@ function groverRequest() {
     }
 
     // display the result
-    document.getElementById('result').innerHTML = "<p>" + result + "</p>";
+    document.getElementById('result').innerHTML = "<p>" + result + " " + groverprob + "</p>";
 }
 
 //function to actually send the POST request to the groverAPI
