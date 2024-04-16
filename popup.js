@@ -1,23 +1,17 @@
 //puts together the request body to send to the sendPost function
 function groverRequest() {
-
-    // get article text from loaded HTML
-    const allText = document.documentElement.outerHTML;
-    const articleIndex = allText.indexOf("articleBody");                        // find articleBody tag
-    const colonIndex = allText.indexOf(":", articleIndex);                      
-    let startIndex = colonIndex + 1;                                            // start after "articleBody:"
-    let nextElementIndex = allText.indexOf('":', startIndex+1);                 // find next : to identify next element
-    let articleSubString = allText.substring(startIndex, nextElementIndex)      // get substring of text between articleBody and next element
-    let endIndex = articleSubString.lastIndexOf(",");                           // identify last comma to find end of HTML element
-    if (endIndex === -1) {
-    // If comma is not found, take the substring until the next element
-        endIndex = nextElementIndex;
+    let articleText = ""
+    // Listen for messages sent from the content script
+    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+        console.log("received");
+        // Check if the message contains the articleText
+        if (message.articleText) {
+        // Process the articleText here
+        console.log("Received articleText from the content script:", message.articleText);
+        articleText = message.articleText;
+        // You can perform further processing or send the articleText to other functions
     }
-
-    let articleText = articleSubString.substring(0, endIndex);                  // get clean article substring
-
-    console.log(allText);
-    console.log(articleText);                                                   // debug
+    });
 
     //article and target are the important things here
     requestBodyJSON = {
@@ -41,7 +35,9 @@ function groverRequest() {
 
     // determine whether the text was likely written by a human or a machine
     var result = "";
-    if (groverprob >= 0 && groverprob <= 0.014853283762931824) {
+    if (articleText == "none found") {
+        result = "We couldn't find an article on this page. ):"
+    } if (groverprob >= 0 && groverprob <= 0.014853283762931824) {
         result = "We believe this article is <str>human-written.</str>";
     } if (groverprob >= 0.014853283762931824 && groverprob <= 0.1) {
         result = "This article is most likely <str>human-written.</str>";
@@ -58,7 +54,7 @@ function groverRequest() {
     }
 
     // display the result
-    document.getElementById('result').innerHTML = "<p>" + result + " " + groverprob + "</p>";
+    document.getElementById('result').innerHTML = "<p>" + result + " " + groverprob + "text: " + articleText + "</p>";
 }
 
 //function to actually send the POST request to the groverAPI

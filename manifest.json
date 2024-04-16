@@ -4,6 +4,7 @@
     "description": "Detects whether text on a webpage is machine-generated or human-written.",
     "version": "1.0",
     "permissions": [
+      "scripting",
       "activeTab"
     ],
     "action": {
