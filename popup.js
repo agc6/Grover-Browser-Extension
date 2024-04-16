@@ -1,7 +1,22 @@
 //puts together the request body to send to the sendPost function
 function groverRequest() {
-    //this is a placeholder; ideally we would have the article text scraped in somehow (BeautifulSoup?)
-    articleText = "Artificial intelligence (AI), in its broadest sense, is intelligence exhibited by machines, particularly computer systems. It is a field of research in computer science that develops and studies methods and software which enable machines to perceive their environment and uses learning and intelligence to take actions that maximize their chances of achieving defined goals.[1] Such machines may be called AIs.\nAI technology is widely used throughout industry, government, and science. Some high-profile applications include advanced web search engines (e.g., Google Search); recommendation systems (used by YouTube, Amazon, and Netflix); interacting via human speech (e.g., Google Assistant, Siri, and Alexa); autonomous vehicles (e.g., Waymo); generative and creative tools (e.g., ChatGPT and AI art); and superhuman play and analysis in strategy games (e.g., chess and Go).[2] However, many AI applications are not perceived as AI: \"A lot of cutting edge AI has filtered into general applications, often without being called AI because once something becomes useful enough and common enough it's not labeled AI anymore.\"[3][4]\nAlan Turing was the first person to conduct substantial research in the field that he called machine intelligence.[5] Artificial intelligence was founded as an academic discipline in 1956.[6] The field went through multiple cycles of optimism,[7][8] followed by periods of disappointment and loss of funding, known as AI winter.[9][10] Funding and interest vastly increased after 2012 when deep learning surpassed all previous AI techniques,[11] and after 2017 with the transformer architecture.[12] This led to the AI boom of the early 2020s, with companies, universities, and laboratories overwhelmingly based in the United States pioneering significant advances in artificial intelligence.[13]"
+
+    // get article text from loaded HTML
+    const allText = document.documentElement.outerHTML;
+    const articleIndex = allText.indexOf("articleBody");                        // find articleBody tag
+    const colonIndex = allText.indexOf(":", articleIndex);                      
+    let startIndex = colonIndex + 1;                                            // start after "articleBody:"
+    let nextElementIndex = allText.indexOf('":', startIndex+1);                 // find next : to identify next element
+    let articleSubString = allText.substring(startIndex, nextElementIndex)      // get substring of text between articleBody and next element
+    let endIndex = articleSubString.lastIndexOf(",");                           // identify last comma to find end of HTML element
+    if (endIndex === -1) {
+    // If comma is not found, take the substring until the next element
+        endIndex = nextElementIndex;
+    }
+
+    let articleText = articleSubString.substring(0, endIndex);                  // get clean article substring
+
+    console.log(articleText);                                                   // debug
 
     //article and target are the important things here
     requestBodyJSON = {
@@ -26,11 +41,11 @@ function groverRequest() {
     // determine whether the text was likely written by a human or a machine
     var result = "";
     if (groverprob >= 0.000002291430519107962 && groverprob <= 0.014853283762931824) {
-        result = "Human Written";
+        result = "We believe this article is <str>human-written.</str>";
     } else if (groverprob >= 0.9996635913848877 && groverprob <= 0.9999986886978149) {
-        result = "Machine Written";
+        result = "We believe this article is <str>human-written.</str>";
     } else {
-        result = "Uncertain";
+        result = "We're not sure about this article.";
     }
 
     // display the result
