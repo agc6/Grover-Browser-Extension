@@ -1,32 +1,16 @@
 {
-    "manifest_version": 3,
-    "name": "Grover",
-    "description": "Detects whether text on a webpage is machine-generated or human-written.",
-    "version": "1.0",
-    "permissions": [
-      "scripting",
-      "tabs",
-      "activeTab",
-      "storage"
-    ],
-    "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'"
-    },
-    "action": {
-      "default_popup": "popup.html",
-      "default_icon":{
-        "16": "icons8-fake-16.png",
-        "48": "icons8-fake-48.png",
-        "128": "icons8-fake-128.png"
-      }
-    },
+  "name": "Get pages source",
+  "version": "1.1",
+  "manifest_version": 3,
+  "description": "Get active tabs or element on that pages source from a popup",
 
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"]
-      }
-    ]
-  }
-  
-  
+  "action": {
+      "default_title": "Get pages source",
+      "default_popup": "popup.html"
+  },
+
+  "permissions": [
+      "scripting",
+      "activeTab"
+  ]
+}
