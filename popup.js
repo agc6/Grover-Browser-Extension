@@ -18,10 +18,10 @@ function verifyArticleText(articleText) {
     var accept = true;
     console.log("Verify " + articleText);
     if (articleText == "None found") {
-        message.innerText = "We couldn't find an article on this page."
+        message.innerText = "<p>We couldn't find an article on this page.</p>"
         accept = false;
     } else if (articleText.length < 100) {
-        message.innerText = "This article is too short to reliably determine its origin."
+        message.innerText = "<p>This article is too short to reliably determine its origin.</p>"
         accept = false;
     }
     return accept;                   // only reached if !false conditions
