@@ -5,7 +5,18 @@ document.addEventListener('DOMContentLoaded', function () {
 async function onClick() {
     var sourceHTML = await getHTML();
     var message = document.querySelector('#message');
-    message.innerText = sourceHTML;
+    articleText = getArticle(sourceHTML)
+    message.innerText = articleText;
+}
+
+function getArticle(sourceHTML) {
+    const articleIndex = sourceHTML.indexOf("articleBody");                        // find articleBody tag
+        if (articleIndex == -1) {
+            articleIndex = sourceHTML.indexOf("article-body");                     // if no articleBody, check article-body tag
+        } if (articleIndex == -1) {
+            articleIndex = sourceHTML.indexOf("article");                          // if neither, settle for "article"
+        }
+    return sourceHTML.substring(articleIndex);
 }
 
 function getHTML() {
