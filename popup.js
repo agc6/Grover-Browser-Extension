@@ -9,7 +9,6 @@ async function onClick() {
     if (verifyArticleText(articleText)) {
         queryAPI(articleText);
     }
-    //message.innerText = articleText;
 }
 
 // handle edge conditions to ensure accurate result
