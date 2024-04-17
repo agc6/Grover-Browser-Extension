@@ -18,10 +18,10 @@ function verifyArticleText(articleText) {
     var accept = true;
     console.log("Verify " + articleText);
     if (articleText == "None found") {
-        message.innerText = "<p>We couldn't find an article on this page.</p>"
+        message.innerText = "We couldn't find an article on this page."
         accept = false;
     } else if (articleText.length < 100) {
-        message.innerText = "<p>This article is too short to reliably determine its origin.</p>"
+        message.innerText = "This article is too short to reliably determine its origin."
         accept = false;
     }
     return accept;                   // only reached if !false conditions
@@ -101,23 +101,29 @@ function queryAPI(articleText) {
         var jsonResponse = JSON.parse(xmlHttp.responseText);
         var groverprob = jsonResponse.groverprob;
         var result = "";
-        // Determine result based on groverprob
-        if (articleText == "none found") {
-            result = "We couldn't find an article on this page. ):";
-        } else if (groverprob >= 0 && groverprob <= 0.014853283762931824) {
+        
+    
+        //check the groverprob number returned in the response to determine whether the article was human or AI-written (and our level of certainty about that).
+        if (groverprob < 0.2) {
             result = "We believe this article is <str>human-written.</str>";
-        } else if (groverprob >= 0.014853283762931824 && groverprob <= 0.1) {
+        }
+        else if (groverprob < 0.35) {
             result = "This article is most likely <str>human-written.</str>";
-        } else if (groverprob >= 0.1 && groverprob <= 0.15) {
+        }
+        else if (groverprob < 0.45) {
             result = "This article may be human-written, but we're not sure.";
-        } else if (groverprob >= 0.8 && groverprob <= 0.85) {
-            result = "This article may be machine-written, but we're not sure.";
-        } else if (groverprob >= 0.85 && groverprob <= 0.9996635913848877) {
-            result = "This article is most likely <str>machine-written.</str>";
-        } else if (groverprob >= 0.9996635913848877 && groverprob <= 0.9999986886978149) {
-            result = "We believe this article is <str>human-written.</str>";
-        } else {
+        } 
+        else if (groverprob < 0.55) {
             result = "We're not sure about this article.";
+        }
+        else if (groverprob < 0.65) {
+            result = "This article may be machine-written, but we're not sure.";
+        } 
+        else if (groverprob < 0.8) {
+            result = "This article is most likely <str>machine-written.</str>";
+        }
+        else {
+            result = "We believe this article is <str>machine-written.</str>";
         }
         // Display the result
         message.innerHTML = "<p>" + result + "</p>";
