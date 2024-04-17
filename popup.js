@@ -5,29 +5,53 @@ document.addEventListener('DOMContentLoaded', function () {
 async function onClick() {
     var sourceHTML = await getHTML();
     var message = document.querySelector('#message');
-    articleText = getArticle(sourceHTML)
-    queryAPI(articleText);
+    articleText = getArticle(sourceHTML);
+    if (verifyArticleText(articleText)) {
+        queryAPI(articleText);
+    }
     //message.innerText = articleText;
 }
 
+// handle edge conditions to ensure accurate result
+function verifyArticleText(articleText) {
+    var message = document.querySelector('#message');
+    var accept = true;
+    console.log("Verify " + articleText);
+    if (articleText == "None found") {
+        message.innerText = "We couldn't find an article on this page."
+        accept = false;
+    } else if (articleText.length < 100) {
+        message.innerText = "This article is too short to reliably determine its origin."
+        accept = false;
+    }
+    return accept;                   // only reached if !false conditions
+}
+
 function getArticle(sourceHTML) {
-    const articleIndex = sourceHTML.indexOf("articleBody");                         // find articleBody tag
-        if (articleIndex == -1) {
-            articleIndex = sourceHTML.indexOf("article-body");                      // if no articleBody, check article-body tag
-        } if (articleIndex == -1) {
-            articleIndex = sourceHTML.indexOf("article");                           // if neither, settle for "article"
-        }
-    const colonIndex = sourceHTML.indexOf(":", articleIndex);                      
-    let startIndex = colonIndex + 1;                                                // start after "articleBody:"
-    let nextElementIndex = sourceHTML.indexOf('":', startIndex+1);                  // find next : to identify next element
-    let articleSubString = sourceHTML.substring(startIndex, nextElementIndex)       // get substring of text between articleBody and next element
-    let endIndex = articleSubString.lastIndexOf(",");                               // identify last comma to find end of HTML element
-    if (endIndex === -1) {
-    // If comma is not found, take the substring until the next element
-        endIndex = nextElementIndex;
+    articleIndex = sourceHTML.indexOf("articleBody");                         // find articleBody tag
+    if (articleIndex == -1) {
+        articleIndex = sourceHTML.indexOf("article-body");                      // if no articleBody, check article-body tag
+    } if (articleIndex == -1) {
+        articleIndex = sourceHTML.indexOf("article");                           // if neither, settle for "article"
     }
 
-    return articleSubString.substring(0, endIndex);                  // return clean article substring
+    if (articleIndex != -1) {
+        const colonIndex = sourceHTML.indexOf(":", articleIndex);                      
+        let startIndex = colonIndex + 1;                                                // start after "articleBody:"
+        let nextElementIndex = sourceHTML.indexOf('":', startIndex+1);                  // find next : to identify next element
+        let articleSubString = sourceHTML.substring(startIndex, nextElementIndex)       // get substring of text between articleBody and next element
+        let endIndex = articleSubString.lastIndexOf(",");                               // identify last comma to find end of HTML element
+        if (endIndex === -1) {
+        // If comma is not found, take the substring until the next element
+            endIndex = nextElementIndex;
+        }
+
+        console.log("Article found: " + sourceHTML.substring(articleIndex-500, endIndex));
+        return articleSubString.substring(0, endIndex);                              // return clean article substring
+    } else {
+        console.log("No tags articleBody, article-body, or article found.");
+        return "None found" ;                                                       // if no article index found, show error
+    }
 }
 
 function getHTML() {
@@ -96,9 +120,9 @@ function queryAPI(articleText) {
             result = "We're not sure about this article.";
         }
         // Display the result
-        message.innerHTML = result;
+        message.innerHTML = "<p>" + result + "</p>";
     } else {
-        message.innerHTML = "<p>Error querying API.</p>";
+        message.innerHTML = "Error querying API.";
     }
 }
 
