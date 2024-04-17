@@ -5,20 +5,19 @@
     "version": "1.0",
     "permissions": [
       "scripting",
-      "tabs",
       "activeTab",
       "storage"
     ],
     "content_security_policy": {
       "extension_pages": "script-src 'self'; object-src 'self'"
     },
+    "icons": {
+      "16": "icons8-fake-16.png",
+      "48": "icons8-fake-48.png",
+      "128": "icons8-fake-128.png"
+    },
     "action": {
-      "default_popup": "popup.html",
-      "default_icon":{
-        "16": "icons8-fake-16.png",
-        "48": "icons8-fake-48.png",
-        "128": "icons8-fake-128.png"
-      }
+      "default_popup": "popup.html"
     },
 
     "content_scripts": [
