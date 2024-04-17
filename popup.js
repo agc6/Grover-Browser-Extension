@@ -1,18 +1,83 @@
-// popup.js
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('clickButton').addEventListener('click', onClick);
+});
 
-// Function to send message to content script and receive article text
-function getArticleText() {
-    // Send message to content script to extract article text
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "extractArticleText" }, function (response) {
-            const articleText = response && response.articleText ? response.articleText : "none found";
-            // Call function to query API with the article text
-            queryAPI(articleText);
-        });
-    });
+async function onClick() {
+    var sourceHTML = await getHTML();
+    var message = document.querySelector('#message');
+    articleText = getArticle(sourceHTML);
+    if (verifyArticleText(articleText)) {
+        queryAPI(articleText);
+    }
+    //message.innerText = articleText;
 }
 
-// Function to query API with article text
+// handle edge conditions to ensure accurate result
+function verifyArticleText(articleText) {
+    var message = document.querySelector('#message');
+    var accept = true;
+    console.log("Verify " + articleText);
+    if (articleText == "None found") {
+        message.innerText = "We couldn't find an article on this page."
+        accept = false;
+    } else if (articleText.length < 100) {
+        message.innerText = "This article is too short to reliably determine its origin."
+        accept = false;
+    }
+    return accept;                   // only reached if !false conditions
+}
+
+function getArticle(sourceHTML) {
+    articleIndex = sourceHTML.indexOf("articleBody");                         // find articleBody tag
+    if (articleIndex == -1) {
+        articleIndex = sourceHTML.indexOf("article-body");                      // if no articleBody, check article-body tag
+    } if (articleIndex == -1) {
+        articleIndex = sourceHTML.indexOf("article");                           // if neither, settle for "article"
+    }
+
+    if (articleIndex != -1) {
+        const colonIndex = sourceHTML.indexOf(":", articleIndex);                      
+        let startIndex = colonIndex + 1;                                                // start after "articleBody:"
+        let nextElementIndex = sourceHTML.indexOf('":', startIndex+1);                  // find next : to identify next element
+        let articleSubString = sourceHTML.substring(startIndex, nextElementIndex)       // get substring of text between articleBody and next element
+        let endIndex = articleSubString.lastIndexOf(",");                               // identify last comma to find end of HTML element
+        if (endIndex === -1) {
+        // If comma is not found, take the substring until the next element
+            endIndex = nextElementIndex;
+        }
+
+        console.log("Article found: " + sourceHTML.substring(articleIndex-500, endIndex));
+        return articleSubString.substring(0, endIndex);                              // return clean article substring
+    } else {
+        console.log("No tags articleBody, article-body, or article found.");
+        return "None found" ;                                                       // if no article index found, show error
+    }
+}
+
+function getHTML() {
+    var message = document.querySelector('#message');
+    message.innerText = "Please wait a moment...";
+
+    return new Promise((resolve, reject) => {
+        chrome.tabs.query({ active: true, currentWindow: true }).then(function (tabs) {
+            var activeTab = tabs[0];
+            var activeTabId = activeTab.id;
+
+            return chrome.scripting.executeScript({
+                target: { tabId: activeTabId },
+                func: DOMtoString
+            });
+
+        }).then(function (results) {
+            resolve(results[0].result);
+        }).catch(function (error) {
+            console.log('There was an error injecting script : \n' + error.message);
+            reject(error);
+        });
+    });
+ }
+
+ // Function to query API with article text
 function queryAPI(articleText) {
     // Assemble request body
     const requestBodyJSON = {
@@ -55,13 +120,18 @@ function queryAPI(articleText) {
             result = "We're not sure about this article.";
         }
         // Display the result
-        document.getElementById('result').innerHTML = "<p>" + result + " " + groverprob + "</p>";
+        message.innerHTML = "<p>" + result + "</p>";
     } else {
-        document.getElementById('result').innerHTML = "<p>Error querying API.</p>";
+        message.innerHTML = "Error querying API.";
     }
 }
 
-// Add event listener to the button to trigger the process
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('fakeNewsButton').addEventListener('click', getArticleText);
-});
+function DOMtoString(selector) {
+    if (selector) {
+        selector = document.querySelector(selector);
+        if (!selector) return "ERROR: querySelector failed to find node"
+    } else {
+        selector = document.documentElement;
+    }
+    return selector.outerHTML;
+}
