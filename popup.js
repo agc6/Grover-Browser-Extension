@@ -105,25 +105,19 @@ function queryAPI(articleText) {
     
         //check the groverprob number returned in the response to determine whether the article was human or AI-written (and our level of certainty about that).
         if (groverprob < 0.2) {
-            result = "We believe this article is <str>human-written.</str>";
-        }
-        else if (groverprob < 0.35) {
-            result = "This article is most likely <str>human-written.</str>";
+            result = "We are quite sure that this article is human-written.";
         }
         else if (groverprob < 0.45) {
-            result = "This article may be human-written, but we're not sure.";
+            result = "This article is most likely human-written, but we're not sure.";
         } 
         else if (groverprob < 0.55) {
-            result = "We're not sure about this article.";
+            result = "We don't know whether this was written by a machine or a human";
         }
-        else if (groverprob < 0.65) {
-            result = "This article may be machine-written, but we're not sure.";
-        } 
         else if (groverprob < 0.8) {
-            result = "This article is most likely <str>machine-written.</str>";
+            result = "This article is most likely machine-written, but we're not sure.";
         }
         else {
-            result = "We believe this article is <str>machine-written.</str>";
+            result = "We are quite sure that this article is machine-written.";
         }
         // Display the result
         message.innerHTML = "<p>" + result + "</p>";
