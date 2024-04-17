@@ -96,7 +96,7 @@ function queryAPI(articleText) {
             result = "We're not sure about this article.";
         }
         // Display the result
-        message.innerHTML = groverprob;
+        message.innerHTML = result;
     } else {
         message.innerHTML = "<p>Error querying API.</p>";
     }
