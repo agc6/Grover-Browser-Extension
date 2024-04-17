@@ -10,13 +10,23 @@ async function onClick() {
 }
 
 function getArticle(sourceHTML) {
-    const articleIndex = sourceHTML.indexOf("articleBody");                        // find articleBody tag
+    const articleIndex = sourceHTML.indexOf("articleBody");                         // find articleBody tag
         if (articleIndex == -1) {
-            articleIndex = sourceHTML.indexOf("article-body");                     // if no articleBody, check article-body tag
+            articleIndex = sourceHTML.indexOf("article-body");                      // if no articleBody, check article-body tag
         } if (articleIndex == -1) {
-            articleIndex = sourceHTML.indexOf("article");                          // if neither, settle for "article"
+            articleIndex = sourceHTML.indexOf("article");                           // if neither, settle for "article"
         }
-    return sourceHTML.substring(articleIndex);
+    const colonIndex = sourceHTML.indexOf(":", articleIndex);                      
+    let startIndex = colonIndex + 1;                                                // start after "articleBody:"
+    let nextElementIndex = sourceHTML.indexOf('":', startIndex+1);                  // find next : to identify next element
+    let articleSubString = sourceHTML.substring(startIndex, nextElementIndex)       // get substring of text between articleBody and next element
+    let endIndex = articleSubString.lastIndexOf(",");                               // identify last comma to find end of HTML element
+    if (endIndex === -1) {
+    // If comma is not found, take the substring until the next element
+        endIndex = nextElementIndex;
+    }
+
+    return articleSubString.substring(0, endIndex);                  // return clean article substring
 }
 
 function getHTML() {
