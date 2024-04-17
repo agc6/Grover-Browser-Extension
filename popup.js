@@ -65,4 +65,3 @@ function queryAPI(articleText) {
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('fakeNewsButton').addEventListener('click', getArticleText);
 });
-z
