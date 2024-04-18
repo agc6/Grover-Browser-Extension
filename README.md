@@ -12,7 +12,7 @@ Steps:
 
 ## How to Use
 
-Once you've downloaded the extension, you will be able to navigate to the page you'd like to check. When you have that open, click on the extension on the top right of Chrome and press the 'Is it fake news?' button. Pressing the button will then print out a message regarding how sure the model is that the text received is human-written or machine-written.
+Once you've downloaded the extension, navigate to the page you'd like to check. When you have that open, click on the extension on the top right of Chrome and press the 'Is this human-written?' button. Pressing the button will then print out a message regarding how sure the model is that the text received is human-written or machine-written.
 
 ## Other Scholarly Articles
 
