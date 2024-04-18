@@ -14,6 +14,18 @@ Steps:
 
 Once you've downloaded the extension, navigate to the page you'd like to check. When you have that open, click on the extension on the top right of Chrome and press the 'Is this human-written?' button. Pressing the button will then print out a message regarding how sure the model is that the text received is human-written or machine-written.
 
+#### Known Limitations  
+Some articles will return false positives. This is due to inconsistencies in how different news sites format their articles. Here is a list of sites that are known to not work with the LLM News Detector:
+- AP News
+- Reuters
+- USA Today
+- Axios
+- NPR
+- Al Jazeera
+- Forbes
+- PBS
+
+
 ## Other Scholarly Articles
 
 ##### Improving Language Understanding by Generative Pre-Training (2018)
