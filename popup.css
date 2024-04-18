@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 35px;
   }
 
   h1{
@@ -9,7 +9,7 @@ body {
   }
 
 .button{
-    padding: 10px 20px;
+    padding: 10px 30px;
     background-color: #007bff;
     color: #fff;
     border: none;
