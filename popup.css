@@ -14,10 +14,11 @@ body {
     color: #fff;
     border: none;
     cursor: pointer;
+    border-radius: 50px;
   }
 
 .button:hover{
-    background-color:palevioletred;
+    background-color: #3995f8;
   }
 
   #result{
