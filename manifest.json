@@ -17,16 +17,8 @@
       "128": "icons8-fake-128.png"
     },
     "action": {
-      "default_popup": "popup.html"
-    },
-
-  "action": {
       "default_title": "Get pages source",
       "default_popup": "popup.html"
-  },
+    }
 
-  "permissions": [
-      "scripting",
-      "activeTab"
-  ]
 }
